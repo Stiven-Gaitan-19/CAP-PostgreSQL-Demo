@@ -1,36 +1,37 @@
 {
-    "name": "mt-tacoshop-srv",
-    "dependencies": {
-        "@sap-cloud-sdk/connectivity": "latest",
-        "@sap-cloud-sdk/http-client": "latest",
-        "@sap/cds": "^6.6.1",
-        "@sap/xsenv": "latest",
-        "@sap/xssec": "latest",
-        "cfenv": "latest",
-        "express": "latest",
-        "passport": "latest"
-    },
-    "scripts": {
-        "start": "node ./srv/server.js",
-        "deploy:sqlite": "cds deploy -2 sqlite::memory:"
-    },
-    "engines": {
-        "node": "^12 || ^14"
-    },
-    "cds": {
-        "requires": {
-            "db": {
-                "kind": "sqlite",
-                "credentials": {
-                    "database": ":memory"
-                }
-            }
-        },
-        "features": {
-            "in_memory_db": true
+  "name": "mt-tacoshop-srv",
+  "dependencies": {
+    "@sap-cloud-sdk/connectivity": "latest",
+    "@sap-cloud-sdk/http-client": "latest",
+    "@sap/cds": "^6.6.1",
+    "@sap/xsenv": "latest",
+    "@sap/xssec": "latest",
+    "cfenv": "latest",
+    "express": "latest",
+    "passport": "latest"
+  },
+  "scripts": {
+    "start": "node ./srv/server.js",
+    "deploy:sqlite": "cds deploy -2 sqlite::memory: --no-save && cds serve all --in-memory"
+  },
+  "engines": {
+    "node": "^12 || ^14"
+  },
+  "cds": {
+    "requires": {
+      "db": {
+        "kind": "sqlite",
+        "model": "*",
+        "credentials": {
+          "database": ":memory:"
         }
+      }
     },
-    "devDependencies": {
-        "sqlite3": "^5.1.6"
+    "features": {
+      "in_memory_db": true
     }
+  },
+  "devDependencies": {
+    "sqlite3": "^5.1.6"
+  }
 }

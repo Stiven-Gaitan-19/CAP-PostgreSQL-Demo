@@ -14,13 +14,13 @@ const { retrieveJwt } = require('@sap-cloud-sdk/connectivity');
 
 const xssec = require('@sap/xssec');
 const passport = require('passport');
-/*
+
 passport.use('JWT', new xssec.JWTStrategy(services.uaa));
 app.use(passport.initialize());
 app.use(passport.authenticate('JWT', {
     session: false
 }));
-*/
+
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
