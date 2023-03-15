@@ -1,0 +1,60 @@
+{
+    "xsappname": "mt-tacoshop",
+    "tenant-mode": "shared",
+    "scopes": [
+        {
+            "name": "$XSAPPNAME.Callback",
+            "description": "With this scope set, the callbacks for tenant onboarding, offboarding and getDependencies can be called.",
+            "grant-as-authority-to-apps": [
+                "$XSAPPNAME(application,sap-provisioning,tenant-onboarding)"
+            ]
+        },
+        {
+            "name": "$XSAPPNAME.Admin",
+            "description": "Admin"
+        },
+        {
+            "name": "$XSAPPNAME.User",
+            "description": "User"
+        }
+    ],
+    "role-templates": [
+        {
+            "name": "Admin",
+            "description": "Admin",
+            "scope-references": [
+                "$XSAPPNAME.Admin"
+            ]
+        },
+        {
+            "name": "User",
+            "description": "User",
+            "scope-references": [
+                "$XSAPPNAME.User"
+            ]
+        }
+    ],
+    "role-collections": [
+        {
+            "name": "mt-tacoshop_Admin",
+            "description": "Multitenant Tacohop Admin",
+            "role-template-references": [
+                "$XSAPPNAME.Admin",
+                "$XSAPPNAME.User"
+            ]
+        },
+        {
+            "name": "mt-tacoshop_User",
+            "description": "Multitenant Tacohop User",
+            "role-template-references": [
+                "$XSAPPNAME.User"
+            ]
+        }
+    ],
+    "oauth2-configuration": {
+        "token-validity": 3600,
+        "redirect-uris": [
+            "https://*-mt-tacoshop-app.cfapps.*.hana.ondemand.com/login/callback"
+        ]
+    }
+}

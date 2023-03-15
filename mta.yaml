@@ -1,0 +1,117 @@
+ID: mt-tacoshop
+_schema-version: "3.1"
+version: 0.0.1
+
+parameters:
+  enable-parallel-deployments: true
+
+modules:
+
+  - name: mt-tacoshop-srv
+    type: nodejs
+    path: srv
+    build-parameters:
+      ignore:
+        - default-*.json
+        - .env
+        - "*node_modules*"
+        - package-lock.json
+    parameters:
+      memory: 256M
+      disk-quota: 512M
+    provides:
+      - name: srv-api
+        properties:
+          srv-url: ${default-url}
+    requires:
+      - name: mt-tacoshop-uaa
+      - name: mt-tacoshop-registry
+      - name: app-api
+        properties:
+          APP_PROTOCOL: ~{protocol}
+          APP_URI: ~{uri}
+      - name: mt-tacoshop-dest
+
+  - name: mt-tacoshop-app
+    type: approuter.nodejs
+    path: app
+    build-parameters:
+      ignore:
+        - default-*.json
+        - .env
+        - "*node_modules*"
+        - package-lock.json
+    parameters:
+      memory: 256M
+      disk-quota: 512M
+      keep-existing-routes: true
+    properties:
+      TENANT_HOST_PATTERN: '^(.*)-${default-uri}'
+    provides:
+      - name: app-api
+        properties:
+          protocol: ${protocol}
+          uri: ${default-uri}
+    requires:
+      - name: mt-tacoshop-uaa
+      - name: srv-api
+        group: destinations
+        properties:
+          name: srv
+          url: ~{srv-url}
+          forwardAuthToken: true
+
+resources:
+  - name: mt-tacoshop-uaa
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service: xsuaa
+      service-plan: application
+      path: ./xs-security.json
+  - name: mt-tacoshop-registry
+    type: org.cloudfoundry.managed-service
+    requires:
+      - name: srv-api
+    parameters:
+      service: saas-registry
+      service-plan: application
+      service-name: mt-tacoshop-registry
+      config:
+        xsappname: mt-tacoshop
+        appName: mt-tacoshop-mqa-test
+        displayName: 'Multitenant Tacohop'
+        description: 'Multitenant Tachoshop SaaS'
+        category: 'Demo'
+        appUrls:
+          onSubscription: ~{srv-api/srv-url}/callback/v1.0/tenants/{tenantId}
+          getDependencies: ~{srv-api/srv-url}/callback/v1.0/dependencies
+          onSubscriptionAsync: false
+          onUnSubscriptionAsync: false
+          callbackTimeoutMillis: 300000
+  - name: mt-tacoshop-dest
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service: destination
+      service-plan: lite
+      config:
+        init_data:
+          instance:
+            existing_destinations_policy: ignore
+            destinations:
+              - Name: mt-tacoshop-cfapi
+                Description: CF Cloud Controller API
+                URL: ${controller-url}
+                Type: HTTP
+                ProxyType: Internet
+                Authentication: OAuth2Password
+                tokenServiceURL: ${authorization-url}/oauth/token
+                clientId: cf
+                clientSecret:
+                User: <SetValueInCockpit>
+                Password: <SetValueInCockpit>
+              - Name: mt-tacoshop-nw
+                Description: Northwind
+                URL: https://services.odata.org/Northwind/Northwind.svc
+                Type: HTTP
+                ProxyType: Internet
+                Authentication: NoAuthentication
