@@ -27,6 +27,7 @@ modules:
     requires:
       - name: mt-tacoshop-uaa
       - name: mt-tacoshop-registry
+      - name: mt-tacoshop-db
       - name: app-api
         properties:
           APP_PROTOCOL: ~{protocol}
@@ -63,6 +64,8 @@ modules:
           forwardAuthToken: true
 
 resources:
+  - name: mt-tacoshop-db
+    type: org.cloudfoundry.existing-service
   - name: mt-tacoshop-uaa
     type: org.cloudfoundry.managed-service
     parameters:
