@@ -5,7 +5,7 @@ version: 0.0.1
 parameters:
   enable-parallel-deployments: true
   keep-existing-routes: true
-
+  
 modules:
 
   - name: mt-tacoshop-srv

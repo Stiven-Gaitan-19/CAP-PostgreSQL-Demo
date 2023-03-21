@@ -22,11 +22,28 @@
     "node": "^12 || ^14"
   },
   "cds": {
+    "build": {
+      "tasks": [
+        {
+          "use": "node-cf",
+          "for": "node-cf",
+          "src": "srv"
+        },
+        {
+          "use": "cds-dbm/dist/build/postgres-cf",
+          "for": "postgres-cf",
+          "src": "db",
+          "options": {
+            "deployCmd": "npx cds-dbm deploy --load-via delta --auto-undeploy"
+          }
+        }
+      ]
+    },
     "requires": {
       "db": {
-        "kind": "database"
+        "kind": "postgres"
       },
-      "database": {
+      "postgres": {
         "dialect": "plain",
         "impl": "cds-pg",
         "model": [

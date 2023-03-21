@@ -3,6 +3,7 @@ const app = express();
 
 const xsenv = require('@sap/xsenv');
 xsenv.loadEnv();
+
 const services = xsenv.getServices({
     uaa: { label: 'xsuaa' },
     registry: { label: 'saas-registry' }
