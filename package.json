@@ -41,10 +41,10 @@
     },
     "requires": {
       "db": {
-        "kind": "postgres"
+        "kind": "postgres",
+        "dialect": "plain"
       },
       "postgres": {
-        "dialect": "plain",
         "impl": "cds-pg",
         "model": [
           "srv"
@@ -57,11 +57,7 @@
         "schema": {
           "default": "public",
           "clone": "_cdsdbm_clone",
-          "reference": "_cdsdbm_ref",
-          "schema": "public",
-          "tenants": [
-            "8f6c9a7a375f44e392e9fbaed242c59b"
-          ]
+          "reference": "_cdsdbm_ref"
         },
         "deploy": {
           "tmpFile": "tmp/_autodeploy.json",

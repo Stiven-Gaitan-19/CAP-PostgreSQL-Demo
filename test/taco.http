@@ -1,0 +1,9 @@
+### Create entity
+POST http://localhost:4004/Tenant/Catalog/Tacos
+Content-Type: application/json
+
+{
+    "type":"Free Sample",
+    "value": 0.00,
+    "currency": "USD"
+}
